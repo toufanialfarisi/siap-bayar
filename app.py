@@ -91,10 +91,10 @@ class InserData(Resource):
         # return response_200, 200
 
         try:
+            print("TRY")
             query = ModelPekerjaan.query.get(
                 namaPekerjaan)
             if query.namaPekerjaan != namaPekerjaan:
-                print("ATAS")
                 data = ModelPekerjaan(
                     namaPekerjaan=namaPekerjaan,
                     nomorKontrak=nomorKontrak,
@@ -106,7 +106,6 @@ class InserData(Resource):
                 db.session.commit()
                 return response_200
             elif query.status != status:
-                print("BAWAH")
                 query.status = status
                 query.nomorKontrak = nomorKontrak
                 db.session.commit()
@@ -130,6 +129,7 @@ class InserData(Resource):
                 }, 404
 
         except:
+            print("EXCEPT")
             data = ModelPekerjaan(
                 namaPekerjaan=namaPekerjaan,
                 nomorKontrak=nomorKontrak,
