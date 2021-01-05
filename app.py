@@ -3,6 +3,7 @@ from flask_restful import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
+import datetime
 
 basedir = os.path.dirname(os.path.abspath(__file__))
 db_file = "sqlite:///" + os.path.join(basedir, "db.sqlite")
@@ -26,12 +27,22 @@ class ModelPekerjaan(db.Model):
     nominalKontrak = db.Column(db.Integer)
     vendor = db.Column(db.String(100))
     status = db.Column(db.String(100))
+    updated = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
 db.create_all()
 
 
 class GetAllData(Resource):
+    def delete(self):
+        query = ModelPekerjaan.query.all()
+        for data in query:
+            db.session.delete(data)
+            db.session.commit()
+        return {
+            "message": "All data removed"
+        }
+
     def get(self):
         query = ModelPekerjaan.query.all()
         data = [
@@ -40,7 +51,8 @@ class GetAllData(Resource):
                 "nomorkontrak": data.nomorKontrak,
                 "nominalkontrak": data.nominalKontrak,
                 "vendor": data.vendor,
-                "status": data.status
+                "status": data.status,
+                "update": str(data.updated)
             }
             for data in query
         ]
@@ -67,41 +79,52 @@ class InserData(Resource):
                 "status": status
             }
         }
-        try:
-            query = ModelPekerjaan.query.filter_by(
-                nomorKontrak=nomorKontrak)[0]
-            if query.nomorKontrak != nomorKontrak and query.status != status:
-                data = ModelPekerjaan(
-                    namaPekerjaan=namaPekerjaan,
-                    nomorKontrak=nomorKontrak,
-                    nominalKontrak=nominalKontrak,
-                    vendor=vendor,
-                    status=status
-                )
-                db.session.add(data)
-                db.session.commit()
-                return response_200
-            else:
-                return {
-                    "message": "duplicated data detected",
-                    "status": "failed",
-                    "code": 404
-                }, 404
+        data = ModelPekerjaan(
+            namaPekerjaan=namaPekerjaan,
+            nomorKontrak=nomorKontrak,
+            nominalKontrak=nominalKontrak,
+            vendor=vendor,
+            status=status
+        )
+        db.session.add(data)
+        db.session.commit()
+        return response_200, 200
 
-        except:
-            data = ModelPekerjaan(
-                namaPekerjaan=namaPekerjaan,
-                nomorKontrak=nomorKontrak,
-                nominalKontrak=nominalKontrak,
-                vendor=vendor,
-                status=status
-            )
-            db.session.add(data)
-            db.session.commit()
-            return response_200
+        # try:
+        #     query = ModelPekerjaan.query.filter_by(
+        #         nomorKontrak=nomorKontrak).first()
+        #     if query.nomorKontrak != nomorKontrak:
+        #         data = ModelPekerjaan(
+        #             namaPekerjaan=namaPekerjaan,
+        #             nomorKontrak=nomorKontrak,
+        #             nominalKontrak=nominalKontrak,
+        #             vendor=vendor,
+        #             status=status
+        #         )
+        #         db.session.add(data)
+        #         db.session.commit()
+        #         return response_200
+        #     else:
+        #         return {
+        #             "message": "duplicated data detected",
+        #             "status": "failed",
+        #             "code": 404
+        #         }, 404
+
+        # except:
+        #     data = ModelPekerjaan(
+        #         namaPekerjaan=namaPekerjaan,
+        #         nomorKontrak=nomorKontrak,
+        #         nominalKontrak=nominalKontrak,
+        #         vendor=vendor,
+        #         status=status
+        #     )
+        #     db.session.add(data)
+        #     db.session.commit()
+        #     return response_200
 
 
-api.add_resource(GetAllData, "/siap-bayar/api/v1", methods=["GET"])
+api.add_resource(GetAllData, "/siap-bayar/api/v1", methods=["GET", "DELETE"])
 api.add_resource(InserData, "/siap-bayar/api/v1/data", methods=["GET"])
 
 if __name__ == "__main__":
