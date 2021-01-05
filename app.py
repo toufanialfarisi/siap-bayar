@@ -22,8 +22,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 class ModelPekerjaan(db.Model):
     # id = db.Column(db.Integer, primary_key=True)
-    namaPekerjaan = db.Column(db.TEXT)
-    nomorKontrak = db.Column(db.String(100), primary_key=True)
+    namaPekerjaan = db.Column(db.TEXT, primary_key=True)
+    nomorKontrak = db.Column(db.String(100))
     nominalKontrak = db.Column(db.Integer)
     vendor = db.Column(db.String(100))
     status = db.Column(db.String(100))
@@ -92,7 +92,7 @@ class InserData(Resource):
 
         try:
             query = ModelPekerjaan.query.get(
-                nomorKontrak)
+                namaPekerjaan)
             if query.namaPekerjaan != namaPekerjaan:
                 print("ATAS")
                 data = ModelPekerjaan(
