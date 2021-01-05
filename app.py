@@ -21,9 +21,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 class ModelPekerjaan(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.Integer, primary_key=True)
     namaPekerjaan = db.Column(db.TEXT)
-    nomorKontrak = db.Column(db.String(100))
+    nomorKontrak = db.Column(db.String(100), primary_key=True)
     nominalKontrak = db.Column(db.Integer)
     vendor = db.Column(db.String(100))
     status = db.Column(db.String(100))
@@ -79,49 +79,64 @@ class InserData(Resource):
                 "status": status
             }
         }
-        data = ModelPekerjaan(
-            namaPekerjaan=namaPekerjaan,
-            nomorKontrak=nomorKontrak,
-            nominalKontrak=nominalKontrak,
-            vendor=vendor,
-            status=status
-        )
-        db.session.add(data)
-        db.session.commit()
-        return response_200, 200
+        # data = ModelPekerjaan(
+        #     namaPekerjaan=namaPekerjaan,
+        #     nomorKontrak=nomorKontrak,
+        #     nominalKontrak=nominalKontrak,
+        #     vendor=vendor,
+        #     status=status
+        # )
+        # db.session.add(data)
+        # db.session.commit()
+        # return response_200, 200
 
-        # try:
-        #     query = ModelPekerjaan.query.filter_by(
-        #         nomorKontrak=nomorKontrak).first()
-        #     if query.nomorKontrak != nomorKontrak:
-        #         data = ModelPekerjaan(
-        #             namaPekerjaan=namaPekerjaan,
-        #             nomorKontrak=nomorKontrak,
-        #             nominalKontrak=nominalKontrak,
-        #             vendor=vendor,
-        #             status=status
-        #         )
-        #         db.session.add(data)
-        #         db.session.commit()
-        #         return response_200
-        #     else:
-        #         return {
-        #             "message": "duplicated data detected",
-        #             "status": "failed",
-        #             "code": 404
-        #         }, 404
+        try:
+            query = ModelPekerjaan.query.get(
+                nomorKontrak)
+            if query.nomorKontrak != nomorKontrak:
+                data = ModelPekerjaan(
+                    namaPekerjaan=namaPekerjaan,
+                    nomorKontrak=nomorKontrak,
+                    nominalKontrak=nominalKontrak,
+                    vendor=vendor,
+                    status=status
+                )
+                db.session.add(data)
+                db.session.commit()
+                return response_200
+            elif query.status != status:
+                query.status = status
+                db.session.commit()
+                return {
+                    "message": "data  diedit",
+                    "status": "success",
+                    "code": 200,
+                    "data": {
+                        "namapekerjaan": query.namaPekerjaan,
+                        "nomorkontrak": query.nomorKontrak,
+                        "nominalkontrak": query.nominalKontrak,
+                        "vendor": query.vendor,
+                        "status": query.status
+                    }
+                }, 200
+            else:
+                return {
+                    "message": "duplicated data detected",
+                    "status": "failed",
+                    "code": 404
+                }, 404
 
-        # except:
-        #     data = ModelPekerjaan(
-        #         namaPekerjaan=namaPekerjaan,
-        #         nomorKontrak=nomorKontrak,
-        #         nominalKontrak=nominalKontrak,
-        #         vendor=vendor,
-        #         status=status
-        #     )
-        #     db.session.add(data)
-        #     db.session.commit()
-        #     return response_200
+        except:
+            data = ModelPekerjaan(
+                namaPekerjaan=namaPekerjaan,
+                nomorKontrak=nomorKontrak,
+                nominalKontrak=nominalKontrak,
+                vendor=vendor,
+                status=status
+            )
+            db.session.add(data)
+            db.session.commit()
+            return response_200, 200
 
 
 api.add_resource(GetAllData, "/siap-bayar/api/v1", methods=["GET", "DELETE"])
