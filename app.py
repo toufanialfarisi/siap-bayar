@@ -93,7 +93,7 @@ class InserData(Resource):
         try:
             query = ModelPekerjaan.query.get(
                 nomorKontrak)
-            if query.nomorKontrak != nomorKontrak:
+            if query.namaPekerjaan != namaPekerjaan:
                 data = ModelPekerjaan(
                     namaPekerjaan=namaPekerjaan,
                     nomorKontrak=nomorKontrak,
