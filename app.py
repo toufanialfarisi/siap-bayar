@@ -27,7 +27,7 @@ class ModelPekerjaan(db.Model):
     nominalKontrak = db.Column(db.Integer)
     vendor = db.Column(db.String(100))
     status = db.Column(db.String(100))
-    updated = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    # updated = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
 db.create_all()
