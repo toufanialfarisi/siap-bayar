@@ -52,7 +52,7 @@ class GetAllData(Resource):
                 "nominalkontrak": data.nominalKontrak,
                 "vendor": data.vendor,
                 "status": data.status,
-                "update": str(data.updated)
+                # "update": str(data.updated)
             }
             for data in query
         ]
