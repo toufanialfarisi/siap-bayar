@@ -103,8 +103,10 @@ class InserData(Resource):
                 )
                 db.session.add(data)
                 db.session.commit()
+                print("ATAS")
                 return response_200
             elif query.status != status:
+                print("BAWAH")
                 query.status = status
                 db.session.commit()
                 return {
