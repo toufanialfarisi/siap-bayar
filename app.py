@@ -94,6 +94,7 @@ class InserData(Resource):
             query = ModelPekerjaan.query.get(
                 nomorKontrak)
             if query.namaPekerjaan != namaPekerjaan:
+                print("ATAS")
                 data = ModelPekerjaan(
                     namaPekerjaan=namaPekerjaan,
                     nomorKontrak=nomorKontrak,
@@ -103,11 +104,11 @@ class InserData(Resource):
                 )
                 db.session.add(data)
                 db.session.commit()
-                print("ATAS")
                 return response_200
             elif query.status != status:
                 print("BAWAH")
                 query.status = status
+                query.nomorKontrak = nomorKontrak
                 db.session.commit()
                 return {
                     "message": "data  diedit",
