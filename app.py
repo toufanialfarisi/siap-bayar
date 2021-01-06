@@ -61,26 +61,30 @@ class GetAllProgressData(Resource):
         try:
             query = ModelProgressPekerjaan.query.all()[0]
             response = {
-                "n_spjl_begih": query.n_spjl_begih,
-                "n_spkpj_begih": query.n_spkpj_begih,
-                "n_spbl_begih": query.n_spbl_begih,
-                "n_spkpb_begih": query.n_spkpb_begih,
-                "n_spjl_betrak": query.n_spjl_betrak,
-                "n_spkpj_betrak": query.n_spkpj_betrak,
-                "n_spbl_betrak": query.n_spbl_betrak,
-                "n_spkpb_betrak": query.n_spkpb_betrak,
-                "val_spjl_begih": query.val_spjl_begih,
-                "val_spkpj_begih": query.val_spkpj_begih,
-                "val_spbl_begih": query.val_spbl_begih,
-                "val_spkpb_begih": query.val_spkpb_begih,
-                "val_spjl_betrak": query.val_spjl_betrak,
-                "val_spkpj_betrak": query.val_spkpj_betrak,
-                "val_spbl_betrak": query.val_spbl_betrak,
-                "val_spkpb_betrak": query.val_spkpb_betrak,
-                "n_begih": query.n_spjl_begih + query.n_spkpj_begih + query.n_spbl_begih + query.n_spkpb_begih,
-                "n_betrak": query.n_spjl_betrak + query.n_spkpj_betrak + query.n_spbl_betrak + query.n_spkpb_betrak,
-                "val_begih": query.val_spjl_begih + query.val_spkpj_begih + query.val_spbl_begih + query.val_spkpb_begih,
-                "val_betrak": query.val_spjl_betrak + query.val_spkpj_betrak + query.val_spbl_betrak + query.val_spkpb_betrak,
+                "status": "success",
+                "code": 200,
+                "data": {
+                    "n_spjl_begih": query.n_spjl_begih,
+                    "n_spkpj_begih": query.n_spkpj_begih,
+                    "n_spbl_begih": query.n_spbl_begih,
+                    "n_spkpb_begih": query.n_spkpb_begih,
+                    "n_spjl_betrak": query.n_spjl_betrak,
+                    "n_spkpj_betrak": query.n_spkpj_betrak,
+                    "n_spbl_betrak": query.n_spbl_betrak,
+                    "n_spkpb_betrak": query.n_spkpb_betrak,
+                    "val_spjl_begih": query.val_spjl_begih,
+                    "val_spkpj_begih": query.val_spkpj_begih,
+                    "val_spbl_begih": query.val_spbl_begih,
+                    "val_spkpb_begih": query.val_spkpb_begih,
+                    "val_spjl_betrak": query.val_spjl_betrak,
+                    "val_spkpj_betrak": query.val_spkpj_betrak,
+                    "val_spbl_betrak": query.val_spbl_betrak,
+                    "val_spkpb_betrak": query.val_spkpb_betrak,
+                    "n_begih": query.n_spjl_begih + query.n_spkpj_begih + query.n_spbl_begih + query.n_spkpb_begih,
+                    "n_betrak": query.n_spjl_betrak + query.n_spkpj_betrak + query.n_spbl_betrak + query.n_spkpb_betrak,
+                    "val_begih": query.val_spjl_begih + query.val_spkpj_begih + query.val_spbl_begih + query.val_spkpb_begih,
+                    "val_betrak": query.val_spjl_betrak + query.val_spkpj_betrak + query.val_spbl_betrak + query.val_spkpb_betrak,
+                }
             }
             return response, 200
         except:
@@ -96,7 +100,9 @@ class GetAllProgressData(Resource):
             db.session.delete(data)
             db.session.commit()
         return {
-            "message": "All data removed"
+            "message": "All data removed",
+            "status": "success",
+            "code": 200
         }
 
 
@@ -188,7 +194,7 @@ class GetProgressData(Resource):
             db.session.commit()
             response = {
                 "message": "sukses input data",
-                "status": "success"
+                "status": "success",
                 "code": 200
             }
             return response, 200
@@ -227,7 +233,9 @@ class GetAllData(Resource):
             db.session.delete(data)
             db.session.commit()
         return {
-            "message": "All data removed"
+            "message": "All data removed",
+            "status": "success",
+            "code": 200
         }
 
 
