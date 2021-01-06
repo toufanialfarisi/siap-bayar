@@ -277,6 +277,8 @@ class InserData(Resource):
             elif query.status != status:
                 query.status = status
                 query.nomorKontrak = nomorKontrak
+                query.nominalKontrak = nominalKontrak
+                query.vendor = vendor
                 db.session.commit()
                 return {
                     "message": "data  diedit",
