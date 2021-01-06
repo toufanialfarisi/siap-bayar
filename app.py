@@ -275,6 +275,7 @@ class InserData(Resource):
                 db.session.commit()
                 return response_200
             elif query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor:
+                namaPekerjaan = namaPekerjaan
                 query.status = status
                 query.nomorKontrak = nomorKontrak
                 query.nominalKontrak = nominalKontrak
