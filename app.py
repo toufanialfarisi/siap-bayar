@@ -138,7 +138,7 @@ class GetProgressData(Resource):
             query.val_spkpb_betrak = request.args.get("val_spkpb_betrak")
             db.session.commit()
             response = {
-                "status": "success"
+                "status": "success",
                 "code": 200,
                 "data": {
                     "n_spjl_begih": query.n_spjl_begih,
