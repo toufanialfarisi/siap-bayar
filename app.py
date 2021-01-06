@@ -84,7 +84,11 @@ class GetAllProgressData(Resource):
             }
             return response, 200
         except:
-            return {"message": "No data available"}, 404
+            return {
+                "status": "failed",
+                "code": 404,
+                "message": "No data available"
+            }, 404
 
     def delete(self):
         query = ModelProgressPekerjaan.query.all()
@@ -134,26 +138,31 @@ class GetProgressData(Resource):
             query.val_spkpb_betrak = request.args.get("val_spkpb_betrak")
             db.session.commit()
             response = {
-                "n_spjl_begih": query.n_spjl_begih,
-                "n_spkpj_begih": query.n_spkpj_begih,
-                "n_spbl_begih": query.n_spbl_begih,
-                "n_spkpb_begih": query.n_spkpb_begih,
-                "n_spjl_betrak": query.n_spjl_betrak,
-                "n_spkpj_betrak": query.n_spkpj_betrak,
-                "n_spbl_betrak": query.n_spbl_betrak,
-                "n_spkpb_betrak": query.n_spkpb_betrak,
-                "val_spjl_begih": query.val_spjl_begih,
-                "val_spkpj_begih": query.val_spkpj_begih,
-                "val_spbl_begih": query.val_spbl_begih,
-                "val_spkpb_begih": query.val_spkpb_begih,
-                "val_spjl_betrak": query.val_spjl_betrak,
-                "val_spkpj_betrak": query.val_spkpj_betrak,
-                "val_spbl_betrak": query.val_spbl_betrak,
-                "val_spkpb_betrak": query.val_spkpb_betrak,
-                "n_begih": query.n_spjl_begih + query.n_spkpj_begih + query.n_spbl_begih + query.n_spkpb_begih,
-                "n_betrak": query.n_spjl_betrak + query.n_spkpj_betrak + query.n_spbl_betrak + query.n_spkpb_betrak,
-                "val_begih": query.val_spjl_begih + query.val_spkpj_begih + query.val_spbl_begih + query.val_spkpb_begih,
-                "val_betrak": query.val_spjl_betrak + query.val_spkpj_betrak + query.val_spbl_betrak + query.val_spkpb_betrak,
+                "status": "success"
+                "code": 200,
+                "data": {
+                    "n_spjl_begih": query.n_spjl_begih,
+                    "n_spkpj_begih": query.n_spkpj_begih,
+                    "n_spbl_begih": query.n_spbl_begih,
+                    "n_spkpb_begih": query.n_spkpb_begih,
+                    "n_spjl_betrak": query.n_spjl_betrak,
+                    "n_spkpj_betrak": query.n_spkpj_betrak,
+                    "n_spbl_betrak": query.n_spbl_betrak,
+                    "n_spkpb_betrak": query.n_spkpb_betrak,
+                    "val_spjl_begih": query.val_spjl_begih,
+                    "val_spkpj_begih": query.val_spkpj_begih,
+                    "val_spbl_begih": query.val_spbl_begih,
+                    "val_spkpb_begih": query.val_spkpb_begih,
+                    "val_spjl_betrak": query.val_spjl_betrak,
+                    "val_spkpj_betrak": query.val_spkpj_betrak,
+                    "val_spbl_betrak": query.val_spbl_betrak,
+                    "val_spkpb_betrak": query.val_spkpb_betrak,
+                    "n_begih": query.n_spjl_begih + query.n_spkpj_begih + query.n_spbl_begih + query.n_spkpb_begih,
+                    "n_betrak": query.n_spjl_betrak + query.n_spkpj_betrak + query.n_spbl_betrak + query.n_spkpb_betrak,
+                    "val_begih": query.val_spjl_begih + query.val_spkpj_begih + query.val_spbl_begih + query.val_spkpb_begih,
+                    "val_betrak": query.val_spjl_betrak + query.val_spkpj_betrak + query.val_spbl_betrak + query.val_spkpb_betrak,
+                }
+
             }
             return response, 200
         except:
@@ -179,6 +188,7 @@ class GetProgressData(Resource):
             db.session.commit()
             response = {
                 "message": "sukses input data",
+                "status": "success"
                 "code": 200
             }
             return response, 200
@@ -188,21 +198,28 @@ class GetAllData(Resource):
     def get(self):
         query = ModelPekerjaan.query.all()
         if query.__len__() != 0:
-            data = {"data": [
-                {
-                    "namapekerjaan": data.namaPekerjaan,
-                    "nomorkontrak": data.nomorKontrak,
-                    "nominalkontrak": data.nominalKontrak,
-                    "vendor": data.vendor,
-                    "status": data.status,
-                    "update": str(data.updated)
-                }
-                for data in query
-            ]}
+            data = {
+                "status": "success",
+                "code": 200,
+                "data": [
+                    {
+                        "namapekerjaan": data.namaPekerjaan,
+                        "nomorkontrak": data.nomorKontrak,
+                        "nominalkontrak": data.nominalKontrak,
+                        "vendor": data.vendor,
+                        "status": data.status,
+                        "update": str(data.updated)
+                    }
+                    for data in query
+                ]}
 
             return data, 200
         else:
-            return {"message": "No data available "}, 404
+            return {
+                "status": "failed",
+                "code": 404,
+                "message": "No data available "
+            }, 404
 
     def delete(self):
         query = ModelPekerjaan.query.all()
@@ -234,19 +251,8 @@ class InserData(Resource):
                 "status": status
             }
         }
-        # data = ModelPekerjaan(
-        #     namaPekerjaan=namaPekerjaan,
-        #     nomorKontrak=nomorKontrak,
-        #     nominalKontrak=nominalKontrak,
-        #     vendor=vendor,
-        #     status=status
-        # )
-        # db.session.add(data)
-        # db.session.commit()
-        # return response_200, 200
 
         try:
-            print("TRY")
             query = ModelPekerjaan.query.get(
                 namaPekerjaan)
             if query.namaPekerjaan != namaPekerjaan:
@@ -284,7 +290,6 @@ class InserData(Resource):
                 }, 404
 
         except:
-            print("EXCEPT")
             data = ModelPekerjaan(
                 namaPekerjaan=namaPekerjaan,
                 nomorKontrak=nomorKontrak,
