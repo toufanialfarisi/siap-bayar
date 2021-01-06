@@ -209,6 +209,7 @@ class GetAllData(Resource):
                 "code": 200,
                 "data": [
                     {
+                        "nomorprab": data.nomorPrab,
                         "namapekerjaan": data.namaPekerjaan,
                         "nomorkontrak": data.nomorKontrak,
                         "nominalkontrak": data.nominalKontrak,
