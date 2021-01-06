@@ -274,14 +274,14 @@ class InserData(Resource):
                 db.session.add(data)
                 db.session.commit()
                 return response_200
-            elif query.status != status:
+            elif query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor:
                 query.status = status
                 query.nomorKontrak = nomorKontrak
                 query.nominalKontrak = nominalKontrak
                 query.vendor = vendor
                 db.session.commit()
                 return {
-                    "message": "data  diedit",
+                    "message": "data diedit",
                     "status": "success",
                     "code": 200,
                     "data": {
