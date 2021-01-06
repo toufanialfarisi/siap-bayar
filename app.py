@@ -21,8 +21,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 class ModelPekerjaan(db.Model):
-    # id = db.Column(db.Integer, primary_key=True)
-    namaPekerjaan = db.Column(db.TEXT, primary_key=True)
+    nomorPrab = db.Column(db.TEXT, primary_key=True)
+    namaPekerjaan = db.Column(db.TEXT)
     nomorKontrak = db.Column(db.String(100))
     nominalKontrak = db.Column(db.Integer)
     vendor = db.Column(db.String(100))
@@ -241,6 +241,7 @@ class GetAllData(Resource):
 
 class InserData(Resource):
     def get(self):
+        nomorPrab = request.args.get("nomorprab")
         namaPekerjaan = request.args.get("namapekerjaan")
         nomorKontrak = request.args.get("nomorkontrak")
         nominalKontrak = request.args.get("nominalkontrak")
@@ -252,6 +253,7 @@ class InserData(Resource):
             "status": "success",
             "code": 200,
             "data": {
+                "nomorprab": nomorPrab,
                 "namapekerjaan": namaPekerjaan,
                 "nomorkontrak": nomorKontrak,
                 "nominalkontrak": nominalKontrak,
@@ -263,10 +265,11 @@ class InserData(Resource):
         try:
             print("TRY")
             query = ModelPekerjaan.query.get(
-                namaPekerjaan)
-            if query.namaPekerjaan != namaPekerjaan:
+                nomorPrab)
+            if query.nomorPrab != nomorPrab:
                 print("query.namaPekerjaan != namaPekerjaan")
                 data = ModelPekerjaan(
+                    nomorPrab=nomorPrab,
                     namaPekerjaan=namaPekerjaan,
                     nomorKontrak=nomorKontrak,
                     nominalKontrak=nominalKontrak,
@@ -276,8 +279,9 @@ class InserData(Resource):
                 db.session.add(data)
                 db.session.commit()
                 return response_200
-            elif query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor:
+            elif query.namaPekerjaan != namaPekerjaan or query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor:
                 print("query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor")
+                query.namaPekerjaan = namaPekerjaan
                 query.status = status
                 query.nomorKontrak = nomorKontrak
                 query.nominalKontrak = nominalKontrak
@@ -305,6 +309,7 @@ class InserData(Resource):
         except:
             print("EXCEPT")
             data = ModelPekerjaan(
+                nomorPrab=nomorPrab,
                 namaPekerjaan=namaPekerjaan,
                 nomorKontrak=nomorKontrak,
                 nominalKontrak=nominalKontrak,
