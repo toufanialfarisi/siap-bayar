@@ -227,7 +227,8 @@ class GetAllData(Resource):
             return {
                 "status": "failed",
                 "code": 404,
-                "message": "No data available "
+                "message": "No data available",
+                "data": []
             }, 404
 
     def delete(self):
