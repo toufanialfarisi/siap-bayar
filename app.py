@@ -22,6 +22,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 class ModelPekerjaan(db.Model):
     nomorPrab = db.Column(db.TEXT, primary_key=True)
+    no = db.Column(db.Integer)
     namaPekerjaan = db.Column(db.TEXT)
     nomorKontrak = db.Column(db.String(100))
     nominalKontrak = db.Column(db.Integer)
@@ -209,6 +210,7 @@ class GetAllData(Resource):
                 "code": 200,
                 "data": [
                     {
+                        "no": data.no,
                         "nomorprab": data.nomorPrab,
                         "namapekerjaan": data.namaPekerjaan,
                         "nomorkontrak": data.nomorKontrak,
@@ -242,6 +244,7 @@ class GetAllData(Resource):
 
 class InserData(Resource):
     def get(self):
+        no = int(request.args.get("no"))
         nomorPrab = request.args.get("nomorprab")
         namaPekerjaan = request.args.get("namapekerjaan")
         nomorKontrak = request.args.get("nomorkontrak")
@@ -254,6 +257,7 @@ class InserData(Resource):
             "status": "success",
             "code": 200,
             "data": {
+                "no": no,
                 "nomorprab": nomorPrab,
                 "namapekerjaan": namaPekerjaan,
                 "nomorkontrak": nomorKontrak,
@@ -264,12 +268,11 @@ class InserData(Resource):
         }
 
         try:
-            print("TRY")
             query = ModelPekerjaan.query.get(
                 nomorPrab)
             if query.nomorPrab != nomorPrab:
-                print("query.namaPekerjaan != namaPekerjaan")
                 data = ModelPekerjaan(
+                    no=no,
                     nomorPrab=nomorPrab,
                     namaPekerjaan=namaPekerjaan,
                     nomorKontrak=nomorKontrak,
@@ -280,8 +283,8 @@ class InserData(Resource):
                 db.session.add(data)
                 db.session.commit()
                 return response_200
-            elif query.namaPekerjaan != namaPekerjaan or query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor:
-                print("query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor")
+            elif query.no != no or query.namaPekerjaan != namaPekerjaan or query.status != status or query.nomorKontrak != nomorKontrak or query.nominalKontrak != nominalKontrak or query.vendor != vendor:
+                query.no = no
                 query.namaPekerjaan = namaPekerjaan
                 query.status = status
                 query.nomorKontrak = nomorKontrak
@@ -293,6 +296,7 @@ class InserData(Resource):
                     "status": "success",
                     "code": 200,
                     "data": {
+                        "no": no,
                         "namapekerjaan": query.namaPekerjaan,
                         "nomorkontrak": query.nomorKontrak,
                         "nominalkontrak": query.nominalKontrak,
@@ -310,6 +314,7 @@ class InserData(Resource):
         except:
             print("EXCEPT")
             data = ModelPekerjaan(
+                no=no,
                 nomorPrab=nomorPrab,
                 namaPekerjaan=namaPekerjaan,
                 nomorKontrak=nomorKontrak,
